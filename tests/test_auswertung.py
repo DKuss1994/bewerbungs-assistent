@@ -22,3 +22,14 @@ def test_report_zeigt_erfolg_nach_passung(config):
 
     assert "hoch (ab 75 %): 1 Einladung(en), 0 Absage(n)" in bericht
     assert "niedrig (unter 50 %): 0 Einladung(en), 1 Absage(n)" in bericht
+
+
+def test_report_zeigt_projektnamen_statt_ids(config):
+    db = BewerbungsDB(config.db_path)
+    bid = db.insert_bewerbung("A GmbH", projekte=["backend", "geloescht"])
+    db.add_rueckmeldung(bid, "einladung")
+
+    bericht = Analytics(config).bericht()
+
+    assert "BackendApp: 1 Einladung(en)" in bericht
+    assert "geloescht: 1 Einladung(en)" in bericht  # unbekannte ID bleibt stehen

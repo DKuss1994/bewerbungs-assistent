@@ -1,3 +1,4 @@
+import json
 import sqlite3
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -100,9 +101,11 @@ class Analytics:
         ):
             if erfolg[schluessel]:
                 z.append(f"\n{titel}:")
+                namen = self._projekt_namen() if schluessel == "projekte" else {}
                 for name, werte in sorted(erfolg[schluessel].items()):
                     z.append(
-                        f"   - {name}: {werte['einladung']} Einladung(en), "
+                        f"   - {namen.get(name, name)}: {werte['einladung']} "
+                        f"Einladung(en), "
                         f"{werte['absage']} Absage(n)"
                     )
 
@@ -114,6 +117,16 @@ class Analytics:
 
         z.append("\n" + "=" * 60)
         return "\n".join(z)
+
+    def _projekt_namen(self) -> Dict[str, str]:
+        """Projekt-ID → Name aus projekte.json (fehlt die Datei: IDs bleiben)."""
+        try:
+            projekte = json.loads(
+                (self.config.data_dir / "projekte.json").read_text(encoding="utf-8")
+            )
+        except (OSError, ValueError):
+            return {}
+        return {p["id"]: p["name"] for p in projekte}
 
     def print_report(self):
         print(self.bericht())
