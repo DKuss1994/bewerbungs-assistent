@@ -1,0 +1,29 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Persönliche Daten – gehören nie ins Repo
+.env
+.env.*
+!.env.example
+data/
+Stellenanzeigen/
+*.db
+*.sqlite3
+*.db.bak*
+attachments/
+
+# Demo-Ausgabe (python -m src.demo)
+demo/
+
+# Logs / IDE / OS
+*.log
+.vscode/
+.idea/
+*.swp
+.DS_Store
